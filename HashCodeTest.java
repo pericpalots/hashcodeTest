@@ -29,9 +29,9 @@ public class HashCodeTest {
     }
 
     private static void initPower() {
-    	power = new int[MAX+1];
+    	power = new int[MAX];
     	int p = 1;
-    	for (int i = 0; i <= MAX; i++) {
+    	for (int i = 0; i < MAX; i++) {
     		power[i] = p;
     		p <<= 1;
     		System.out.println(i +" -> " + power[i]);
@@ -40,8 +40,8 @@ public class HashCodeTest {
     }
     
     private static void initStrings() {
-    	strings = new String[MAX+1];
-		for (int i = 0; i <= MAX; i ++) {
+    	strings = new String[MAX];
+		for (int i = 0; i < MAX; i ++) {
 			int length = power[i];
 			StringBuilder s = new StringBuilder(length);
 			for(int j = 0; j < length; j++) {
@@ -54,7 +54,7 @@ public class HashCodeTest {
     }
     private static void checkHashCodeTime() {
 		System.out.println("Length\t Iterations\t Time HASHCODETIME(keylength)");
-		for (int j = 1; j <= MAX; j++) {
+		for (int j = 0; j < MAX; j++) {
 			int length = power[j];
 			String test = strings[j];
 			int dummy = 0;
@@ -70,7 +70,7 @@ public class HashCodeTest {
 
     private static void checkEqualsTime() {
 		System.out.println("Length\t Iterations\t Time EQUALS(keylength)");
-		for (int j = 1; j <= MAX; j++) {
+		for (int j = 0; j < MAX; j++) {
 			int length = power[j];
 			String test = strings[j];
 			String orig = test.substring(0, test.length()-1) + "A"; //Equal but the last char to avoid optimization!
@@ -84,10 +84,26 @@ public class HashCodeTest {
 			System.out.println("" + length + "\t"+ MAXITERS + "\t " + ms(elapsedTime) + " " + dummy);
 		}
     }
+    private static void checkEqualsTimeSameString() {
+		System.out.println("Length\t Iterations\t Time EQUALS(keylength) (using same String)");
+		for (int j = 0; j < MAX; j++) {
+			int length = power[j];
+			String test = strings[j];
+			String orig = new String(test);
+			boolean dummy = true;
+			long startTime = System.nanoTime();
+			for (int i = 0; i < MAXITERS; i++) {
+				dummy &= test.equals(orig);
+			}
+			long stopTime = System.nanoTime();
+			long elapsedTime = stopTime - startTime;
+			System.out.println("" + length + "\t"+ MAXITERS + "\t " + ms(elapsedTime) + " " + dummy);
+		}
+    }
     
     private static void checkArrayAccessTime() {
 		System.out.println("Length\t Iterations\t Time ACCESSING A POSITION IN AN ARRAY");
-		for (int j = 1; j <= MAX; j++) {
+		for (int j = 0; j < MAX; j++) {
 			int length = power[j];
 			int [] s = new int[length];
 			for(int i = 0; i < length; i++) {
@@ -106,7 +122,7 @@ public class HashCodeTest {
 
     private static void checkGetHashMapTime() {
 		System.out.println("Length\t Iterations\t Time USING A MAP");
-		for (int j = 1; j <= MAX; j++) {
+		for (int j = 0; j < MAX; j++) {
 			int length = power[j];
 			String test = strings[j];
 			Map<String, Integer> map = new HashMap<String, Integer>();
@@ -140,8 +156,9 @@ public class HashCodeTest {
 		initStrings();
 		checkHashCodeTime();
 		checkEqualsTime();
-		checkArrayAccessTime();
 		checkGetHashMapTime();
+		checkEqualsTimeSameString();
+		checkArrayAccessTime();
 	}
 
 }
