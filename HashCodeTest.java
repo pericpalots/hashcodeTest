@@ -105,14 +105,14 @@ public class HashCodeTest {
 		System.out.println("Length\t Iterations\t Time ACCESSING A POSITION IN AN ARRAY");
 		for (int j = 0; j < MAX; j++) {
 			int length = power[j];
-			int [] s = new int[length];
-			for(int i = 0; i < length; i++) {
-				s[i] = i;
+			Integer [] s = new Integer[MAX];
+			for(int i = 0; i < MAX; i++) {
+				s[i] = power[i];
 			}
 			int dummy = 0;
 			long startTime = System.nanoTime();
 			for (int i = 0; i < MAXITERS; i++) {
-				dummy += s[length/2];
+				dummy += s[j];
 			}
 			long stopTime = System.nanoTime();
 			long elapsedTime = stopTime - startTime;
